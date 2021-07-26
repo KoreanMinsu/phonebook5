@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="phonebook">
+
+	<resultMap id="resultMapPersonVo" type="PersonVo">
+		<result column="person_id" property="personID" />
+		<result column="name" property="name" />
+		<result column="hp" property="hp" />
+		<result column="company" property="company" />
+	</resultMap>
+
+
+	<!-- 쿼리짜기 -->
+	<!-- LIST -->
+	<select id="getList" resultType="PersonVo">
+    	<![CDATA[
+			SELECT	person_id personId
+				,	name
+				,	hp
+				,	company
+			FROM	person
+			ORDER BY person_id DESC	
+	     ]]>
+	</select>
+
+	<!-- INSERT -->
+	<insert id="insert" parameterType="PersonVo">
+		<![CDATA[
+			INSERT INTO person
+			VALUES (seq_person_no.NEXTVAL
+			,		#{name}
+			,		#{hp}
+			,		#{company}
+			)
+		]]>
+	</insert>
+
+	<!-- INSERT2(using map) -->
+	<insert id="insert2" parameterType="map">
+		<![CDATA[
+			INSERT INTO person
+			VALUES (seq_person_no.NEXTVAL
+			,		#{name}
+			,		#{hp}
+			,		#{company}
+			)
+		]]>
+	</insert>
+
+	<!--Delete(Vo 안묶을시 기본 type) -->
+	<!-- 파라미터 1개일 경우 생략 가능 -->
+	<delete id="delete" parameterType="int">
+		<![CDATA[
+		DELETE FROM person
+		WHERE
+			person_id = #{person_id}
+		]]>
+	</delete>
+
+	<!-- 한명 Select - resultMap -->
+	<select id="personInfo" parameterType="int" resultMap="resultMapPersonVo">
+		<![CDATA[
+			SELECT	person_id
+			,	    name
+			,	    hp
+			,	    company
+			FROM    person
+			WHERE	person_id = #{person_id}
+		]]>
+	</select>
+
+	<!-- 한명 Select - resultType=map -->
+	<select id="personInfo2" parameterType="int" resultType="map">
+		<![CDATA[
+			SELECT	person_id
+			,	    name
+			,	    hp
+			,	    company
+			FROM    person
+			WHERE	person_id = #{person_id}
+		]]>
+	</select>
+
+
+
+
+	<!-- update -->
+	<update id="update" parameterType="PersonVo">
+		<![CDATA[
+			UPDATE 		person
+			SET			name = #{name}
+			,			hp = #{hp}
+			,			company = #{company}
+			WHERE		person_id = #{personID}
+		]]>
+	</update>
+
+</mapper>
